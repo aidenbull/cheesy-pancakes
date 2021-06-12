@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
+//Testing a quick change for git
 
 //Don't look at this code if you're squeamish. Many shortcuts have been taken to reduce time writing. 
  // As such the following code breaks many principles of writing clean and reusable code. You've been advised
