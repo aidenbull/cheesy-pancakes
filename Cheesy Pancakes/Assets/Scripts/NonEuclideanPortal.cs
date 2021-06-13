@@ -62,14 +62,14 @@ public class NonEuclideanPortal : MonoBehaviour
         camera1.targetTexture = renderPlane2Texture;
         renderPlane2.GetComponent<MeshRenderer>().material.mainTexture = renderPlane2Texture;
 
-        camera1Object.transform.position = portal1.transform.position + Quaternion.Euler(portal2.transform.eulerAngles - portal1.transform.eulerAngles) * (mainCameraStartCoords - portal2.transform.position);
-        camera2Object.transform.position = portal2.transform.position + Quaternion.Euler(portal1.transform.eulerAngles - portal2.transform.eulerAngles) * (mainCameraStartCoords - portal1.transform.position);
-        //camera1Object.transform.localPosition = (mainCameraStartCoords - portal2.transform.position);
-        //camera2Object.transform.localPosition = (mainCameraStartCoords - portal1.transform.position);
         camera1Object.transform.rotation = portal1.transform.rotation;
         camera2Object.transform.rotation = portal2.transform.rotation;
-        camera1StartCoords = camera1Object.transform.localPosition;
-        camera2StartCoords = camera2Object.transform.localPosition;
+        camera1Object.transform.position = portal1.transform.position + Quaternion.Euler(portal1.transform.eulerAngles - portal2.transform.eulerAngles) * Quaternion.AngleAxis(180f, camera1Object.transform.up) * (mainCameraStartCoords - portal2.transform.position);
+        camera2Object.transform.position = portal2.transform.position + Quaternion.Euler(portal2.transform.eulerAngles - portal1.transform.eulerAngles) * Quaternion.AngleAxis(180f, camera2Object.transform.up) * (mainCameraStartCoords - portal1.transform.position);
+        //camera1Object.transform.localPosition = (mainCameraStartCoords - portal2.transform.position);
+        //camera2Object.transform.localPosition = (mainCameraStartCoords - portal1.transform.position);
+        camera1StartCoords = camera1Object.transform.position;
+        camera2StartCoords = camera2Object.transform.position;
 
         //Set correct starting offsets for illusion cameras
         Debug.Log(mainCameraStartCoords);
@@ -90,11 +90,11 @@ public class NonEuclideanPortal : MonoBehaviour
 
     void UpdateIllusion1()
     {
-        camera2Object.transform.localPosition = camera2StartCoords + Quaternion.Euler(portal1.transform.eulerAngles - portal2.transform.eulerAngles) * (mainCamera.transform.position - mainCameraStartCoords);
+        camera2Object.transform.position = camera2StartCoords + Quaternion.Euler(portal2.transform.eulerAngles - portal1.transform.eulerAngles) * Quaternion.AngleAxis(180f, camera1.transform.up) * (mainCamera.transform.position - mainCameraStartCoords);
         float xDisplacement = Vector3.Dot(Vector3.Project(camera2Object.transform.position - backPlane2.transform.position, camera2Object.transform.right), camera2Object.transform.right);
         float yDisplacement = Vector3.Dot(Vector3.Project(camera2Object.transform.position - backPlane2.transform.position, camera2Object.transform.up), camera2Object.transform.up);
         camera2.lensShift = new Vector2(-xDisplacement / 2 / (viewPlaneWidth / 2), -yDisplacement / 2 / (viewPlaneWidth / 2));
-        float perpDistance = Vector3.Project((backPlane2.transform.position - camera2Object.transform.position), backPlane2.transform.up).magnitude;
+        float perpDistance = Vector3.Dot(Vector3.Project((backPlane2.transform.position - camera2Object.transform.position), backPlane2.transform.up), backPlane2.transform.up);
         if (perpDistance > minIllusionDistance)
         {
             float fov = 2 * Mathf.Atan((viewPlaneWidth / 2) / (perpDistance)) * Mathf.Rad2Deg;
@@ -110,10 +110,10 @@ public class NonEuclideanPortal : MonoBehaviour
 
 
         float cameraIllusionDist = (mainCamera.transform.position - renderPlane1.transform.position).magnitude;
-        float cameraIllusionPerpDist = Vector3.Project((renderPlane1StartCoords - mainCamera.transform.position), -renderPlane1.transform.up).magnitude;
+        float cameraIllusionPerpDist = Vector3.Dot(Vector3.Project((renderPlane1StartCoords - mainCamera.transform.position), -renderPlane1.transform.up), -renderPlane1.transform.up);
         if (cameraIllusionDist < viewPlaneWidth && cameraIllusionPerpDist < minIllusionDistance && cameraIllusionPerpDist > -(portalLength/2)-0.1f)
         {
-            float currentIllusionOffset = mainCamera.transform.position.z - renderPlane1StartCoords.z + minIllusionDistance;
+            float currentIllusionOffset = minIllusionDistance - cameraIllusionPerpDist;
             renderPlane1.transform.position = renderPlane1StartCoords + -renderPlane1.transform.up * currentIllusionOffset;
         }
         else
@@ -125,11 +125,11 @@ public class NonEuclideanPortal : MonoBehaviour
     //One of the ugliest Ctrl-c Ctrl-v's of my life
     void UpdateIllusion2()
     {
-        camera1Object.transform.localPosition = camera1StartCoords + Quaternion.Euler(portal2.transform.eulerAngles - portal1.transform.eulerAngles) * (mainCamera.transform.position - mainCameraStartCoords);
+        camera1Object.transform.position = camera1StartCoords + Quaternion.Euler(portal1.transform.eulerAngles - portal2.transform.eulerAngles) * Quaternion.AngleAxis(180f, camera1.transform.up) * (mainCamera.transform.position - mainCameraStartCoords);
         float xDisplacement = Vector3.Dot(Vector3.Project(camera1Object.transform.position - backPlane1.transform.position, camera1Object.transform.right), camera1Object.transform.right);
         float yDisplacement = Vector3.Dot(Vector3.Project(camera1Object.transform.position - backPlane1.transform.position, camera1Object.transform.up), camera1Object.transform.up);
         camera1.lensShift = new Vector2(-xDisplacement / 2 / (viewPlaneWidth / 2), -yDisplacement / 2 / (viewPlaneWidth / 2));
-        float perpDistance = Vector3.Project((backPlane1.transform.position - camera1Object.transform.position), backPlane1.transform.up).magnitude;
+        float perpDistance = Vector3.Dot(Vector3.Project((backPlane1.transform.position - camera1Object.transform.position), backPlane1.transform.up), backPlane1.transform.up);
         if (perpDistance > minIllusionDistance)
         {
             float fov = 2 * Mathf.Atan((viewPlaneWidth / 2) / (perpDistance)) * Mathf.Rad2Deg;
@@ -145,10 +145,10 @@ public class NonEuclideanPortal : MonoBehaviour
 
 
         float cameraIllusionDist = (mainCamera.transform.position - renderPlane2.transform.position).magnitude;
-        float cameraIllusionPerpDist = Vector3.Project((renderPlane2StartCoords - mainCamera.transform.position), -renderPlane1.transform.up).magnitude;
+        float cameraIllusionPerpDist = Vector3.Dot(Vector3.Project((renderPlane2StartCoords - mainCamera.transform.position), -renderPlane2.transform.up), -renderPlane2.transform.up);
         if (cameraIllusionDist < viewPlaneWidth && cameraIllusionPerpDist < minIllusionDistance && cameraIllusionPerpDist > -(portalLength / 2) - 0.1f)
         {
-            float currentIllusionOffset = mainCamera.transform.position.z - renderPlane2StartCoords.z + minIllusionDistance;
+            float currentIllusionOffset = minIllusionDistance - cameraIllusionPerpDist;
             renderPlane2.transform.position = renderPlane2StartCoords + -renderPlane2.transform.up * currentIllusionOffset;
         }
         else
