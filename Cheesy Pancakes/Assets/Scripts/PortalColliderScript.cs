@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PortalColliderScript : MonoBehaviour
 {
+    //holds a bool, thats pretty much it
+
     public bool IsTouchingPlayer = false;
 
     private void OnTriggerEnter(Collider other)
