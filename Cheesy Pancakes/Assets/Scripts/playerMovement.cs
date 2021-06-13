@@ -2,30 +2,62 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Code referenced from a movement script from a previous jam
+
 public class playerMovement : MonoBehaviour
 {
 	
-	// this is the video i watched for reference:
-	//https://www.youtube.com/watch?v=_QajrabyTJc
-	
-	// seems his implementation was out of date compared to this unity verion
-	// cause i followed it exactly, and it doesnt work that great.
-	
 	public CharacterController controller;
 	
-	public float speed = 12f;
+    public enum JumpState {falling, starting, rising, grounded};
+
+    public JumpState jumpState = JumpState.falling;
+    public bool jumpPressed = false;
+
+	public float acceleration = 0.02f;
+    public float maxSpeed = 0.4f;
+    public Vector3 velocity;
 
     // Update is called once per frame
     void Update()
     {
-        float x = Input.GetAxis("Horizontal");
-		float z = Input.GetAxis("Vertical");
+        GatherButtonDownInput();
 		
-		Vector3 move = transform.right * x + transform.forward * z; 
 		// trans.right is along the right axis of the player
-		// .forward is forward and back fromt the players view		
+		// .forward is forward and back fromt the players view	
 		
-		controller.Move(move * speed * Time.deltaTime);
-		
+    }
+
+    private void FixedUpdate()
+    {
+        HandleJumpingAndGravity();
+
+        HandleHorizontalMovement();
+    }
+
+    void GatherButtonDownInput()
+    {
+        if (Input.GetButtonDown("Jump"))
+        {
+            jumpPressed = true;
+        }
+    }
+
+    void ClearButtonDownInput()
+    {
+        jumpPressed = false;
+    }
+
+    void HandleJumpingAndGravity()
+    {
+        if (jumpPressed && jumpState == JumpState.grounded)
+        {
+
+        }
+    }
+
+    void HandleHorizontalMovement()
+    {
+
     }
 }

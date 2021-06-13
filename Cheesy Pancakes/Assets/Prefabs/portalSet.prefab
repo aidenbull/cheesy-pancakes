@@ -155,7 +155,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 1f570041cf054124fa33fde62647d02e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -240,7 +240,7 @@ MonoBehaviour:
   mainCamera: {fileID: 0}
   viewPlaneWidth: 1.6
   portalLength: 1
-  minIllusionDistance: 0.2
+  minIllusionDistance: 0.3
 --- !u!1 &7795208938728129785
 GameObject:
   m_ObjectHideFlags: 0
@@ -907,7 +907,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 1f570041cf054124fa33fde62647d02e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1093,14 +1093,14 @@ Camera:
     width: 1
     height: 1
   near clip plane: 1
-  far clip plane: 10
+  far clip plane: 30
   field of view: 90.33
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 383
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 662950370fb7fd741977906c16342c50, type: 2}
   m_TargetDisplay: 0
@@ -1262,14 +1262,14 @@ Camera:
     width: 1
     height: 1
   near clip plane: 1
-  far clip plane: 10
+  far clip plane: 30
   field of view: 90.33
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 383
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 662950370fb7fd741977906c16342c50, type: 2}
   m_TargetDisplay: 0
