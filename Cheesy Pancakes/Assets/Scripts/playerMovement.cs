@@ -38,6 +38,8 @@ public class playerMovement : MonoBehaviour
         groundCollider.OnGroundExit += OnGroundExit;
 
         mainCamera = transform.Find("Main Camera").gameObject;
+
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
@@ -82,6 +84,12 @@ public class playerMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             jumpPressed = true;
+        }
+
+        //Adding this here just to put it somewhere
+        if (Input.GetButtonDown("Cancel"))
+        {
+            Application.Quit();
         }
     }
 

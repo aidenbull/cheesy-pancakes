@@ -3,7 +3,12 @@ guid: 605366fb1eae54d4694b559348c4407a
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Bonbon_Material
+    second: {fileID: 2100000, guid: b707e9e7471d7e14ebb072f19e569d32, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
