@@ -21,6 +21,7 @@ public class NonEuclideanPortal : MonoBehaviour
     GameObject renderPlane1;
     Vector3 renderPlane1StartCoords;
     GameObject backPlane1;
+    PortalColliderScript portal1Collider;
 
     //portal2 objects
     GameObject portal2;
@@ -30,10 +31,13 @@ public class NonEuclideanPortal : MonoBehaviour
     GameObject renderPlane2;
     Vector3 renderPlane2StartCoords;
     GameObject backPlane2;
+    PortalColliderScript portal2Collider;
 
     // Start is called before the first frame update
     void Start()
     {
+        mainCameraStartCoords = mainCamera.transform.position;
+
         //portal1 objects
         portal1 = transform.Find("portal1").gameObject;
         camera1Object = transform.Find("Camera1").gameObject;
@@ -41,8 +45,7 @@ public class NonEuclideanPortal : MonoBehaviour
         renderPlane1 = portal1.transform.Find("renderPlane").gameObject;
         renderPlane1StartCoords = renderPlane1.transform.position;
         camera1 = camera1Object.GetComponent<Camera>();
-
-        mainCameraStartCoords = mainCamera.transform.position;
+        portal1Collider = portal1.GetComponent<PortalColliderScript>();
 
         //portal2 objects
         portal2 = transform.Find("portal2").gameObject;
@@ -51,6 +54,7 @@ public class NonEuclideanPortal : MonoBehaviour
         renderPlane2 = portal2.transform.Find("renderPlane").gameObject;
         renderPlane2StartCoords = renderPlane2.transform.position;
         camera2 = camera2Object.GetComponent<Camera>();
+        portal2Collider = portal2.GetComponent<PortalColliderScript>();
 
 
         //Create render textures for the two render planes
@@ -84,6 +88,7 @@ public class NonEuclideanPortal : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        CheckForTeleports();
         UpdateIllusion1();
         UpdateIllusion2();
     }
@@ -154,6 +159,38 @@ public class NonEuclideanPortal : MonoBehaviour
         else
         {
             renderPlane2.transform.position = renderPlane2StartCoords;
+        }
+    }
+
+    bool inPortal1 = false;
+    bool inPortal2 = false;
+    void CheckForTeleports()
+    {
+        Check1to2Teleport();
+        Check2to1Teleport();
+    }
+
+    void Check1to2Teleport()
+    {
+        if (portal1Collider.IsTouchingPlayer)
+        {
+            if (Vector3.Dot(mainCamera.transform.position - portal1.transform.position, portal1.transform.forward) < -0.1)
+            {
+                mainCamera.transform.position = portal2.transform.position + Quaternion.Euler(portal2.transform.eulerAngles - portal1.transform.eulerAngles) * (mainCamera.transform.position - portal1.transform.position);
+                mainCamera.transform.rotation *= Quaternion.Euler(portal2.transform.eulerAngles - portal1.transform.eulerAngles) * Quaternion.AngleAxis(180f, portal1.transform.up);
+            }
+        }
+    }
+
+    void Check2to1Teleport()
+    {
+        if (portal2Collider.IsTouchingPlayer)
+        {
+            if (Vector3.Dot(mainCamera.transform.position - portal2.transform.position, portal2.transform.forward) < -0.1)
+            {
+                mainCamera.transform.position = portal1.transform.position + Quaternion.Euler(portal1.transform.eulerAngles - portal2.transform.eulerAngles) * (mainCamera.transform.position - portal2.transform.position);
+                mainCamera.transform.rotation *= Quaternion.Euler(portal1.transform.eulerAngles - portal2.transform.eulerAngles) * Quaternion.AngleAxis(180f, portal2.transform.up);
+            }
         }
     }
 }
