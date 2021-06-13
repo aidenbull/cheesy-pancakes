@@ -176,8 +176,9 @@ public class NonEuclideanPortal : MonoBehaviour
         {
             if (Vector3.Dot(mainCamera.transform.position - portal1.transform.position, portal1.transform.forward) < -0.1)
             {
-                mainCamera.transform.position = portal2.transform.position + Quaternion.Euler(portal2.transform.eulerAngles - portal1.transform.eulerAngles) * (mainCamera.transform.position - portal1.transform.position);
-                mainCamera.transform.rotation *= Quaternion.Euler(portal2.transform.eulerAngles - portal1.transform.eulerAngles) * Quaternion.AngleAxis(180f, portal1.transform.up);
+                mainCamera.transform.position = portal2.transform.position + Quaternion.Euler(portal2.transform.eulerAngles - portal1.transform.eulerAngles) * Quaternion.AngleAxis(180f, portal2.transform.up) * (mainCamera.transform.position - portal1.transform.position);
+                mainCamera.transform.rotation = Quaternion.Euler(mainCamera.transform.rotation.eulerAngles + (portal2.transform.eulerAngles - portal1.transform.eulerAngles) + new Vector3(0f, 180f, 0));
+                //mainCamera.transform.rotation *= Quaternion.AngleAxis(180f, portal2.transform.up);
             }
         }
     }
@@ -188,8 +189,9 @@ public class NonEuclideanPortal : MonoBehaviour
         {
             if (Vector3.Dot(mainCamera.transform.position - portal2.transform.position, portal2.transform.forward) < -0.1)
             {
-                mainCamera.transform.position = portal1.transform.position + Quaternion.Euler(portal1.transform.eulerAngles - portal2.transform.eulerAngles) * (mainCamera.transform.position - portal2.transform.position);
-                mainCamera.transform.rotation *= Quaternion.Euler(portal1.transform.eulerAngles - portal2.transform.eulerAngles) * Quaternion.AngleAxis(180f, portal2.transform.up);
+                mainCamera.transform.position = portal1.transform.position + Quaternion.Euler(portal1.transform.eulerAngles - portal2.transform.eulerAngles) * Quaternion.AngleAxis(180f, portal2.transform.up) * (mainCamera.transform.position - portal2.transform.position);
+                mainCamera.transform.rotation = Quaternion.Euler(mainCamera.transform.rotation.eulerAngles + (portal1.transform.eulerAngles - portal2.transform.eulerAngles) + new Vector3(0f, 180f, 0));
+                //mainCamera.transform.rotation *= Quaternion.AngleAxis(180f, portal2.transform.up);
             }
         }
     }
